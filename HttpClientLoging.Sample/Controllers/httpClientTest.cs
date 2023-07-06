@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
+using System.Net.NetworkInformation;
 
 namespace HttpClientLoging.Sample.Controllers
 {
@@ -75,6 +76,48 @@ namespace HttpClientLoging.Sample.Controllers
             var request = new RestRequest("", Method.Get);
             var response =await client.ExecuteAsync(request);
             return Ok("ok");
+        }
+
+        [HttpGet("PortCountRestSharp")]
+        public async Task<IActionResult> PortCountRestSharp()
+        {
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+           
+
+            for (int i = 0; i < 100; i++)
+            {
+                var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+                var client = new RestClient("https://www.google.com/");
+
+                var request = new RestRequest("",Method.Get);
+                var response = client.Execute(request);
+                Console.WriteLine(tcpConnInfoArray.Count());
+                await  Task.Delay(100);
+            }
+
+            return Ok();
+        }
+
+
+        [HttpGet("PortCountRestSharpCientFactory")]
+        public async Task<IActionResult> PortCountRestSharpCientFactory()
+ 
+        {
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+                var client = new RestClient(_httpClient);
+
+                var request = new RestRequest("https://www.google.com/", Method.Get);
+                var response = client.Execute(request);
+                Console.WriteLine(tcpConnInfoArray.Count());
+                await Task.Delay(10);
+            }
+
+            return Ok();
         }
     }
 }
