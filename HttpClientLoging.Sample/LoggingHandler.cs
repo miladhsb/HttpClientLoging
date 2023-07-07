@@ -19,10 +19,10 @@ namespace HttpClientLoging.Sample
         {
             // Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler
 
-            if (InnerHandler == null)
-            {
-                InnerHandler = new HttpClientHandler();
-            }
+            //if (InnerHandler == null)
+            //{
+            //    InnerHandler = new HttpClientHandler();
+            //}
 
 
             _logger.LogInformation("Request:");
