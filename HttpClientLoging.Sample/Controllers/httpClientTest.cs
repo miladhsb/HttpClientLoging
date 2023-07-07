@@ -35,7 +35,9 @@ namespace HttpClientLoging.Sample.Controllers
         public async Task<IActionResult> TestHttpCientNewInstance()
         {
 
-            var client = new HttpClient(_loggingHandler);
+           // var client = new HttpClient(_loggingHandler);
+
+            var client = new HttpClient(CustomeHttpClientFactory.CreatePipeline(new HttpClientHandler(),new DelegatingHandler[] { _loggingHandler }));
             client.DefaultRequestHeaders.Add("User-Agent", "TestApp");
 
 
@@ -59,17 +61,28 @@ namespace HttpClientLoging.Sample.Controllers
         public async Task<IActionResult> TestRestSharp()
         {
 
+            //var options = new RestClientOptions("https://www.google.com/")
+            //{
+
+            //    ConfigureMessageHandler = p =>
+            //    {
+            //        p = _loggingHandler;
+            //        return p;
+            //    }
+
+            //};
+
+            //or
             var options = new RestClientOptions("https://www.google.com/")
             {
 
                 ConfigureMessageHandler = p =>
                 {
-                    p = _loggingHandler;
+                    p = CustomeHttpClientFactory.CreatePipeline(new HttpClientHandler(), new DelegatingHandler[] { _loggingHandler });
                     return p;
                 }
 
             };
-
 
             IRestClient client = new RestClient(options);
 
