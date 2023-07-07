@@ -11,13 +11,15 @@ namespace HttpClientLoging.Sample.Controllers
        
 
       
-        private readonly HttpClient _httpClient;
+        
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly LoggingHandler _loggingHandler;
 
         public httpClientTest(IHttpClientFactory httpClientFactory, LoggingHandler loggingHandler)
         {
          
-            this._httpClient = httpClientFactory.CreateClient("TestClient");
+   
+            this._httpClientFactory = httpClientFactory;
             this._loggingHandler = loggingHandler;
         }
 
@@ -26,7 +28,7 @@ namespace HttpClientLoging.Sample.Controllers
         [HttpGet("TestHttpCientFactory")]
         public async Task<IActionResult> TestHttpCientFactory()
         {
-
+            var _httpClient = _httpClientFactory.CreateClient("TestClient");
             var res = await _httpClient.GetAsync("https://www.google.com/");
 
             return Ok("ok");
@@ -53,6 +55,7 @@ namespace HttpClientLoging.Sample.Controllers
         public async Task<IActionResult> TestRestSharpHttpCientFactory()
         {
             //  IRestClient client = new RestClient(options);
+            var _httpClient = _httpClientFactory.CreateClient("TestClient");
             var client = new RestClient(_httpClient);
 
             var request = new RestRequest("https://www.google.com/", Method.Get);
@@ -101,10 +104,12 @@ namespace HttpClientLoging.Sample.Controllers
         public async Task<IActionResult> PortCountRestSharp()
         {
             IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-           
 
+
+            
             for (int i = 0; i < 100; i++)
             {
+                
                 var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
                 var client = new RestClient("https://www.google.com/");
 
@@ -128,6 +133,7 @@ namespace HttpClientLoging.Sample.Controllers
             for (int i = 0; i < 100; i++)
             {
                 var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+                var _httpClient = _httpClientFactory.CreateClient("TestClient");
                 var client = new RestClient(_httpClient);
 
                 var request = new RestRequest("https://www.google.com/", Method.Get);
@@ -151,7 +157,7 @@ namespace HttpClientLoging.Sample.Controllers
             for (int i = 0; i < 100; i++)
             {
                 var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
-
+                var _httpClient = _httpClientFactory.CreateClient("TestClient");
                 var res = await _httpClient.GetAsync("https://www.google.com/");
 
                 Console.WriteLine(tcpConnInfoArray.Count());
